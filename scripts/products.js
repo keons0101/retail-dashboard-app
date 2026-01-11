@@ -137,3 +137,55 @@ function createProductCard(product) {
     
     return card;
 }
+
+function createRatingStars(rating) {
+    let stars = '';
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    
+    // Full star
+    for (let i = 0; i < fullStars; i++) {
+        stars += '<i class="fas fa-star"></i>';
+    }
+    
+    // Half star
+    if (hasHalfStar) {
+        stars += '<i class="fas fa-star-half-alt"></i>';
+    }
+    
+    // Empty star
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    for (let i = 0; i < emptyStars; i++) {
+        stars += '<i class="far fa-star"></i>';
+    }
+    
+    return stars;
+}
+
+function getCategoryIcon(category) {
+    const icons = {
+        'Apparel': 'tshirt',
+        'Electronics': 'laptop',
+        'Home Goods': 'home',
+        'Accessories': 'bag-shopping'
+    };
+    return icons[category] || 'cube';
+}
+
+function viewProductDetails(productId) {
+    console.log(`View product details with ID: ${productId}`);
+    
+    // Temp alert
+    const product = window.app.allProducts.find(p => p.id === productId);
+    if (product) {
+        alert(`Detalles de ${product.name}:\n\n` +
+            `Precio: $${product.price}\n` +
+            `Stock: ${product.stock} unidades\n` +
+            `Rating: ${product.rating}/5\n\n` +
+            `${product.description}`);
+    }
+}
+
+window.renderProducts = renderProducts;
+window.createProductCard = createProductCard;
+window.viewProductDetails = viewProductDetails;
