@@ -3,15 +3,26 @@ const API_BASE_URL = 'http://localhost:3000';
 let allProducts = []; // Store all products
 let currentView = 'products'; // products, dashboard, cart
 
-document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Retail Dashboard inicializado');
+window.addEventListener('load', async () => {
+    console.log('Retail Dashboard fully loaded');
     
+    // Initialize navigation first
     initNavigation();
     
+    // Load products from server
     await loadProducts();
     
-    renderProducts();
+    // Check if renderProducts exists before calling it
+    if (typeof renderProducts === 'function') {
+        console.log('renderProducts function found, calling it...');
+        renderProducts();
+    } else {
+        console.error('renderProducts function NOT found!');
+        // Fallback: render products directly
+        renderProductsFallback();
+    }
     
+    // Show initial section
     showSection('products');
 });
 
@@ -39,6 +50,11 @@ async function loadProducts() {
         if (result.success) {
             allProducts = result.data;
             console.log(`${allProducts.length} loaded products:`, allProducts);
+
+            window.app = window.app || {};
+            window.app.allProducts = allProducts;
+
+            return allProducts;
         } else {
             throw new Error(result.message || 'There was an error while loading products');
         }
@@ -159,10 +175,41 @@ function updateDashboardMetrics() {
     // This is for Day 5
 }
 
-// Export variables and functions
-window.app = {
-    API_BASE_URL,
-    allProducts,
-    currentView,
-    showSection
-};
+function renderProductsFallback() {
+    console.log('Using fallback render (products.js not loaded)');
+    const container = document.getElementById('products-container');
+    if (!container || !allProducts.length) return;
+    
+    container.innerHTML = '';
+    
+    allProducts.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <div class="product-image">
+                <div class="image-placeholder">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <div class="product-badge ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+                    ${product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                </div>
+            </div>
+            <div class="product-info">
+                <h3>${product.name}</h3>
+                <p class="price">$${product.price.toFixed(2)}</p>
+                <p>${product.description}</p>
+                <button onclick="alert('${product.name} - $${product.price}')">
+                    View Details
+                </button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+    
+    console.log(`${allProducts.length} products rendered (fallback)`);
+}
+
+window.app = window.app || {};
+window.app.API_BASE_URL = API_BASE_URL;
+window.app.showSection = showSection;
+window.app.loadProducts = loadProducts;
