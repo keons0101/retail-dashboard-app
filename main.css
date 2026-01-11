@@ -144,7 +144,6 @@ h1, h2, h3, h4 {
     margin-top: 6rem;
 }
 
-
 .section-header {
     margin-bottom: 40px;
     text-align: center;
@@ -163,4 +162,119 @@ h1, h2, h3, h4 {
 .section-header p {
     color: var(--gray);
     font-size: 18px;
+}
+
+/* PRODUCTS GRID */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px;
+    color: var(--gray);
+}
+
+.loading i {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+/* PRODUCT CARD (se completará mañana) */
+.product-card {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* DASHBOARD */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.metric-card {
+    background: white;
+    padding: 25px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.metric-header h3 {
+    font-size: 16px;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.metric-trend {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.metric-trend.positive {
+    background-color: rgba(76, 201, 240, 0.15);
+    color: #0a9396;
+}
+
+.metric-trend.negative {
+    background-color: rgba(248, 37, 133, 0.15);
+    color: #f72585;
+}
+
+.metric-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 5px;
+}
+
+.metric-period {
+    font-size: 14px;
+    color: var(--gray);
+}
+
+.dashboard-coming-soon {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: var(--border-radius);
+    padding: 50px;
+    text-align: center;
+    border: 2px dashed #dee2e6;
+}
+
+.dashboard-coming-soon i {
+    font-size: 48px;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.dashboard-coming-soon h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.dashboard-coming-soon p {
+    color: var(--gray);
 }
