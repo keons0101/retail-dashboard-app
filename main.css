@@ -124,6 +124,7 @@ h1, h2, h3, h4 {
 .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    padding: 0 2.25rem;
     gap: 30px;
 }
 
