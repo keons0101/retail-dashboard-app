@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function loadProducts() {
-    console.log('Cargando productos desde el servidor...');
+    console.log('Loading products from server...');
     
     const productsContainer = document.getElementById('products-container');
     
@@ -24,7 +24,7 @@ async function loadProducts() {
         productsContainer.innerHTML = `
             <div class="loading">
                 <i class="fas fa-spinner fa-spin"></i>
-                <p>Conectando con el servidor...</p>
+                <p>Connecting to server...</p>
             </div>
         `;
         
@@ -38,13 +38,13 @@ async function loadProducts() {
         
         if (result.success) {
             allProducts = result.data;
-            console.log(`${allProducts.length} productos cargados:`, allProducts);
+            console.log(`${allProducts.length} loaded products:`, allProducts);
         } else {
-            throw new Error(result.message || 'Error al cargar productos');
+            throw new Error(result.message || 'There was an error while loading products');
         }
         
     } catch (error) {
-        console.error('Error cargando productos:', error);
+        console.error('There was an error while loading products:', error);
         
         productsContainer.innerHTML = `
             <div class="error-message">
@@ -52,10 +52,10 @@ async function loadProducts() {
                 <h3>No se pudieron cargar los productos</h3>
                 <p>${error.message}</p>
                 <p class="error-help">
-                    <strong>Solución:</strong> Asegúrate de que el servidor esté corriendo en http://localhost:3000
+                    <strong>Solución:</strong> Make sure server is running on http://localhost:3000
                 </p>
                 <button onclick="location.reload()" class="retry-btn">
-                    <i class="fas fa-redo"></i> Reintentar
+                    <i class="fas fa-redo"></i> Try again
                 </button>
             </div>
         `;
@@ -134,22 +134,35 @@ function initNavigation() {
 }
 
 function showSection(sectionId) {
-    // Ocultar todas las secciones
+    // Hide all sections
     const sections = document.querySelectorAll('section[id]');
     sections.forEach(section => {
         section.style.display = 'none';
     });
     
-    // Mostrar la sección seleccionada
+    // Show selected section
     const activeSection = document.getElementById(sectionId);
     if (activeSection) {
         activeSection.style.display = 'block';
         currentView = sectionId;
-        console.log(`📌 Sección activa: ${sectionId}`);
+        console.log(`Active section: ${sectionId}`);
         
-        // Si es el dashboard, actualizar métricas
+        // If dashboard is requested, update charts
         if (sectionId === 'dashboard') {
             updateDashboardMetrics();
         }
     }
 }
+
+function updateDashboardMetrics() {
+    console.log('Updating charts in Dashboard...');
+    // This is for Day 5
+}
+
+// Export variables and functions
+window.app = {
+    API_BASE_URL,
+    allProducts,
+    currentView,
+    showSection
+};
