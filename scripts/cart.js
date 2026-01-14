@@ -366,13 +366,15 @@ function showCartNotification(message) {
 
 function processCheckout() {
     if (cartState.items.length === 0) {
-        alert('Cart is empty');
+        alert('Your cart is empty');
         return;
     }
     
-    alert(`Checkout procesado por $${cartState.total.toFixed(2)}\n\nEsta funcionalidad se completará en el Día 4 (Compras y Stock)`);
-    
-    clearCart();
+    if (window.PurchaseModule && window.PurchaseModule.showCheckoutModal) {
+        window.PurchaseModule.showCheckoutModal();
+    } else {
+        alert('Checkout system not available. Please try again later.');
+    }
 }
 
 function getCategoryIcon(category) {
