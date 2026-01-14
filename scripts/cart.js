@@ -91,6 +91,10 @@ function addToCart(productId, quantity = 1) {
     saveCartToStorage();
     
     showCartNotification(`"${product.name}" added to your cart`);
+
+    if (window.updateProductStockDisplays) {
+        window.updateProductStockDisplays();
+    }
     
     return true;
 }
@@ -120,6 +124,10 @@ function removeFromCart(productId, removeCompletely = false) {
     calculateCartTotals();
     updateCartUI();
     saveCartToStorage();
+
+    if (window.updateProductStockDisplays) {
+        window.updateProductStockDisplays();
+    }
     
     return true;
 }

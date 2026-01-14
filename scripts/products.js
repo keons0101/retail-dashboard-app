@@ -191,6 +191,49 @@ function viewProductDetails(productId) {
     }
 }
 
+function updateProductStockDisplays() {
+    document.querySelectorAll('.product-card').forEach(card => {
+        const productId = parseInt(card.dataset.id);
+        const product = window.app.allProducts.find(p => p.id === productId);
+        
+        if (product) {
+            const badge = card.querySelector('.product-badge');
+            const addButton = card.querySelector('.add-to-cart');
+            const cartItem = window.cartModule ? window.cartModule.getCartItems().find(item => item.id === productId) : null;
+            const inCartQuantity = cartItem ? cartItem.quantity : 0;
+            
+            if (badge) {
+                if (product.stock <= 0) {
+                    badge.textContent = 'Out of Stock';
+                    badge.className = 'product-badge out-of-stock';
+                } else if (product.stock - inCartQuantity <= 5) {
+                    badge.textContent = `Only ${product.stock - inCartQuantity} left`;
+                    badge.className = 'product-badge low-stock';
+                } else if (product.stock - inCartQuantity <= 10) {
+                    badge.textContent = `${product.stock - inCartQuantity} in stock`;
+                    badge.className = 'product-badge medium-stock';
+                } else {
+                    badge.textContent = 'In Stock';
+                    badge.className = 'product-badge in-stock';
+                }
+            }
+            
+            if (addButton) {
+                if (product.stock <= 0) {
+                    addButton.disabled = true;
+                    addButton.innerHTML = '<i class="fas fa-times"></i> Out of Stock';
+                } else if (inCartQuantity >= product.stock) {
+                    addButton.disabled = true;
+                    addButton.innerHTML = `<i class="fas fa-check"></i> Max (${inCartQuantity})`;
+                } else if (inCartQuantity > 0) {
+                    addButton.disabled = false;
+                    addButton.innerHTML = `<i class="fas fa-cart-plus"></i> Add More (${inCartQuantity} in cart)`;
+                }
+            }
+        }
+    });
+}
+
 window.renderProducts = renderProducts;
 window.createProductCard = createProductCard;
 window.viewProductDetails = viewProductDetails;
