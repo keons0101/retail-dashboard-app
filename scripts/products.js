@@ -113,6 +113,11 @@ function createProductCard(product) {
                 <button class="btn btn-outline view-details" data-id="${product.id}">
                     <i class="fas fa-eye"></i> View Details
                 </button>
+                
+                <button class="btn btn-review add-review" data-id="${product.id}">
+                    <i class="fas fa-star"></i> Review
+                </button>
+                
                 <button class="btn btn-primary add-to-cart" data-id="${product.id}" 
                         ${product.stock <= 0 ? 'disabled' : ''}>
                     <i class="fas fa-cart-plus"></i> Add to Cart
@@ -124,6 +129,7 @@ function createProductCard(product) {
     // Add event listeners for buttons
     const viewDetailsBtn = card.querySelector('.view-details');
     const addToCartBtn = card.querySelector('.add-to-cart');
+    const addReviewBtn = card.querySelector('.add-review');
 
     viewDetailsBtn.addEventListener('click', () => {
         viewProductDetails(product.id);
@@ -137,6 +143,14 @@ function createProductCard(product) {
             }
         } else {
             alert('Cart module is not loaded. Please recharge the page');
+        }
+    });
+
+    addReviewBtn.addEventListener('click', () => {
+        if (window.ReviewsModule && window.ReviewsModule.showAddReviewModal) {
+            window.ReviewsModule.showAddReviewModal(product.id);
+        } else {
+            alert('Review system not available');
         }
     });
 
