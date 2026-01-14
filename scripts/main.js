@@ -5,32 +5,37 @@ let currentView = 'products'; // products, dashboard, cart
 
 window.addEventListener('load', async () => {
     console.log('Retail Dashboard fully loaded');
-    
+
     // Initialize navigation first
     initNavigation();
-    
+
     // Load products from server
     await loadProducts();
-    
+
     // Check if renderProducts exists before calling it
     if (typeof renderProducts === 'function') {
         console.log('renderProducts function found, calling it...');
         renderProducts();
+        if (window.cartModule && window.cartModule.initCart) {
+            window.cartModule.initCart();
+        } else {
+            console.error('Módulo del carrito no disponible');
+        }
     } else {
         console.error('renderProducts function NOT found!');
         // Fallback: render products directly
         renderProductsFallback();
     }
-    
+
     // Show initial section
     showSection('products');
 });
 
 async function loadProducts() {
     console.log('Loading products from server...');
-    
+
     const productsContainer = document.getElementById('products-container');
-    
+
     try {
         productsContainer.innerHTML = `
             <div class="loading">
@@ -38,15 +43,15 @@ async function loadProducts() {
                 <p>Connecting to server...</p>
             </div>
         `;
-        
+
         const response = await fetch(`${API_BASE_URL}/products`);
-        
+
         if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
         }
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
             allProducts = result.data;
             console.log(`${allProducts.length} loaded products:`, allProducts);
@@ -58,10 +63,10 @@ async function loadProducts() {
         } else {
             throw new Error(result.message || 'There was an error while loading products');
         }
-        
+
     } catch (error) {
         console.error('There was an error while loading products:', error);
-        
+
         productsContainer.innerHTML = `
             <div class="error-message">
                 <i class="fas fa-exclamation-triangle"></i>
@@ -75,7 +80,7 @@ async function loadProducts() {
                 </button>
             </div>
         `;
-        
+
         const style = document.createElement('style');
         style.textContent = `
             .error-message {
@@ -131,17 +136,17 @@ async function loadProducts() {
 
 function initNavigation() {
     const navLinks = document.querySelectorAll('.nav-link');
-    
+
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            
+
             // Remove "active" class on every link
             navLinks.forEach(l => l.classList.remove('active'));
-            
+
             // Add "active" class to the clicked link
             link.classList.add('active');
-            
+
             // Show the clicked section
             const sectionId = link.getAttribute('href').substring(1);
             showSection(sectionId);
@@ -155,14 +160,14 @@ function showSection(sectionId) {
     sections.forEach(section => {
         section.style.display = 'none';
     });
-    
+
     // Show selected section
     const activeSection = document.getElementById(sectionId);
     if (activeSection) {
         activeSection.style.display = 'block';
         currentView = sectionId;
         console.log(`Active section: ${sectionId}`);
-        
+
         // If dashboard is requested, update charts
         if (sectionId === 'dashboard') {
             updateDashboardMetrics();
@@ -179,9 +184,9 @@ function renderProductsFallback() {
     console.log('Using fallback render (products.js not loaded)');
     const container = document.getElementById('products-container');
     if (!container || !allProducts.length) return;
-    
+
     container.innerHTML = '';
-    
+
     allProducts.forEach(product => {
         const card = document.createElement('div');
         card.className = 'product-card';
@@ -205,7 +210,7 @@ function renderProductsFallback() {
         `;
         container.appendChild(card);
     });
-    
+
     console.log(`${allProducts.length} products rendered (fallback)`);
 }
 
