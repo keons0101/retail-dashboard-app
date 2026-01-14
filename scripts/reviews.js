@@ -15,7 +15,7 @@ const ReviewsModule = {
         modal.innerHTML = `
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Add a Review for ${product.name}</h3>
+                    <h3>Add a review for ${product.name}</h3>
                     <button class="close-review-modal">&times;</button>
                 </div>
                 
@@ -72,89 +72,195 @@ const ReviewsModule = {
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.5);
+                background: rgba(0, 0, 0, 0.7);
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                z-index: 1000;
+                z-index: 2000;
+                animation: fadeIn 0.3s ease;
             }
-            
+
             .review-modal .modal-content {
                 background: white;
-                border-radius: var(--border-radius);
-                width: 90%;
+                border-radius: 16px;
+                width: 95%;
                 max-width: 500px;
-                max-height: 90vh;
+                max-height: 85vh;
                 overflow-y: auto;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+                animation: slideUp 0.4s ease;
             }
-            
-            .current-rating {
+
+            .review-modal .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 24px 30px;
+                border-bottom: 1px solid var(--light-gray);
+                background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+                color: white;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .review-modal .modal-header h3 {
+                margin: 0;
+                font-size: 22px;
+                font-weight: 600;
+            }
+
+            .review-modal .close-review-modal {
+                background: rgba(255, 255, 255, 0.2);
+                border: none;
+                font-size: 28px;
+                cursor: pointer;
+                color: white;
+                line-height: 1;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+            }
+
+            .review-modal .close-review-modal:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+            .review-modal .modal-body {
+                padding: 30px;
+            }
+
+            .review-modal .current-rating {
                 text-align: center;
-                margin-bottom: 25px;
-                padding: 15px;
+                margin-bottom: 30px;
+                padding: 20px;
                 background: #f8f9fa;
-                border-radius: 8px;
+                border-radius: 12px;
+                border: 1px solid #e9ecef;
             }
-            
-            .current-rating p {
-                margin: 0 0 10px 0;
+
+            .review-modal .current-rating p {
+                margin: 0 0 12px 0;
                 font-size: 16px;
+                color: var(--dark);
             }
-            
-            .current-stars {
-                color: #fbbf24;
+
+            .review-modal .current-rating strong {
+                color: var(--primary);
                 font-size: 20px;
             }
-            
-            .star-rating {
-                display: flex;
-                justify-content: center;
-                gap: 10px;
-                margin: 15px 0;
-            }
-            
-            .star {
-                cursor: pointer;
-                font-size: 32px;
-                color: #e2e8f0;
-                transition: color 0.2s;
-            }
-            
-            .star:hover,
-            .star.active {
+
+            .review-modal .current-stars {
                 color: #fbbf24;
+                font-size: 24px;
+                letter-spacing: 2px;
             }
-            
-            .star.active ~ .star {
-                color: #e2e8f0;
+
+            .review-modal .review-form {
+                margin-bottom: 30px;
             }
-            
-            .review-form textarea {
+
+            .review-modal .form-group {
+                margin-bottom: 24px;
+            }
+
+            .review-modal .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: var(--dark);
+                font-size: 15px;
+            }
+
+            .review-modal .form-group input[type="text"],
+            .review-modal .form-group textarea {
                 width: 100%;
-                padding: 12px;
-                border: 1px solid var(--light-gray);
-                border-radius: 6px;
+                padding: 14px 16px;
+                border: 2px solid #e2e8f0;
+                border-radius: 10px;
                 font-size: 16px;
-                font-family: inherit;
-                resize: vertical;
+                font-family: 'Inter', sans-serif;
+                transition: all 0.3s ease;
+                background: #fdfdfd;
             }
-            
-            .review-form textarea:focus {
+
+            .review-modal .form-group input[type="text"]:focus,
+            .review-modal .form-group textarea:focus {
                 outline: none;
                 border-color: var(--primary);
+                background: white;
+                box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
             }
-            
-            .modal-actions {
+
+            .review-modal .form-group textarea {
+                resize: vertical;
+                min-height: 120px;
+                line-height: 1.5;
+            }
+
+            .review-modal .star-rating {
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+                margin: 15px 0 20px 0;
+            }
+
+            .review-modal .star {
+                cursor: pointer;
+                font-size: 36px;
+                color: #e2e8f0;
+                transition: all 0.2s ease;
+                padding: 5px;
+            }
+
+            .review-modal .star:hover {
+                color: #fde68a;
+                transform: scale(1.2);
+            }
+
+            .review-modal .star.active {
+                color: #fbbf24;
+                transform: scale(1.1);
+            }
+
+            .review-modal .star.active ~ .star {
+                color: #fbbf24;
+            }
+
+            .review-modal .modal-actions {
                 display: flex;
                 gap: 15px;
-                margin-top: 25px;
+                margin-top: 30px;
             }
-            
-            .modal-actions .btn {
+
+            .review-modal .modal-actions .btn {
                 flex: 1;
-                padding: 15px;
+                padding: 16px;
+                font-size: 16px;
+                font-weight: 600;
+                border-radius: 10px;
             }
+
+            .review-modal .processing-message {
+                text-align: center;
+                padding: 40px 20px;
+                color: var(--gray);
+            }
+
+            .review-modal .processing-message i {
+                font-size: 36px;
+                margin-bottom: 20px;
+                color: var(--primary);
+            }
+
+            .review-modal .processing-message p {
+                font-size: 16px;
+                margin: 0;
+            }
+
         `;
         
         document.head.appendChild(styles);
