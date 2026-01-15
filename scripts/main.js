@@ -171,44 +171,58 @@ function showSection(sectionId) {
         // If dashboard is requested, update charts
         if (sectionId === 'dashboard') {
             updateDashboardMetrics();
+
+            if (window.app.allProducts && window.app.allProducts.length > 0) {
+                setTimeout(() => {
+                    if (window.ChartsModule && window.ChartsModule.initCharts) {
+                        window.ChartsModule.initCharts(window.app.allProducts);
+                    }
+                }, 100);
+            }
         }
     }
 }
 
 async function updateDashboardMetrics() {
     console.log('Updating dashboard metrics...');
-    
+
     try {
         const response = await fetch(`${API_BASE_URL}/products`);
         const result = await response.json();
-        
+
         if (result.success) {
             window.app.allProducts = result.data;
-            
-            // Calcular métricas
+
             const metrics = calculateMetrics(result.data);
-            
+
             updateDashboardUI(metrics);
+
+            console.log('Attempting to initialize charts...');
+            if (window.ChartsModule && window.ChartsModule.initCharts) {
+                console.log('ChartsModule found, initializing charts with', result.data.length, 'products');
+                window.ChartsModule.initCharts(result.data);
+            } else {
+                console.error('ChartsModule not available');
+            }
         }
     } catch (error) {
         console.error('Error updating dashboard metrics:', error);
     }
 }
-
 function calculateMetrics(products) {
     const totalRevenue = products.reduce((sum, product) => {
         const initialStock = 10;
         const sold = Math.max(0, initialStock - product.stock);
         return sum + (product.price * sold);
     }, 0);
-    
+
     const lowStockProducts = products.filter(p => p.stock <= 5 && p.stock > 0).length;
     const outOfStockProducts = products.filter(p => p.stock === 0).length;
     const totalReviews = products.reduce((sum, product) => sum + product.reviews.length, 0);
-    const averageRating = products.length > 0 
+    const averageRating = products.length > 0
         ? products.reduce((sum, product) => sum + product.rating, 0) / products.length
         : 0;
-    
+
     return {
         totalRevenue: Math.round(totalRevenue),
         lowStockProducts: lowStockProducts,
@@ -224,18 +238,18 @@ function updateDashboardUI(metrics) {
     const ordersElement = document.querySelector('.metric-card:nth-child(2) .metric-value');
     const reviewsElement = document.querySelector('.metric-card:nth-child(3) .metric-value');
     const returnsElement = document.querySelector('.metric-card:nth-child(4) .metric-value');
-    
+
     if (revenueElement) revenueElement.textContent = `$${metrics.totalRevenue.toLocaleString()}`;
     if (ordersElement) ordersElement.textContent = metrics.lowStockProducts;
     if (reviewsElement) reviewsElement.textContent = metrics.totalReviews;
     if (returnsElement) returnsElement.textContent = `${metrics.outOfStockProducts} products`;
-    
+
     const ordersPeriod = document.querySelector('.metric-card:nth-child(2) .metric-period');
     const reviewsPeriod = document.querySelector('.metric-card:nth-child(3) .metric-period');
-    
+
     if (ordersPeriod) ordersPeriod.textContent = 'Need restocking';
     if (reviewsPeriod) reviewsPeriod.textContent = `${metrics.averageRating} avg rating`;
-    
+
     console.log('Dashboard metrics updated:', metrics);
 }
 
